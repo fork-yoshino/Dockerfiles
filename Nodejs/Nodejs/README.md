@@ -14,12 +14,12 @@
 
 作業ディレクトリに移動し、下記コマンドを実行し、コンテナを起動する。
 ```
-docker-compose up -d
+docker compose up -d --build
 ```
 
 下記コマンドを実行し、appコンテナに入る。
 ```
-docker-compose exec app ash
+docker compose exec app ash
 ```
 
 ## 3. その他
