@@ -14,14 +14,14 @@
 
 ターミナルを開いて作業ディレクトリに移動し、下記コマンドを実行する。<br>
 ```
-docker-compose build --no-cache
+docker compose build --no-cache
 ```
 
 ## 3. Viteプロジェクトの作成
 
 下記コマンドを実行し、Viteプロジェクトを作成する。
 ```
-docker-compose run --rm frontend /bin/sh -c 'yarn create vite test'
+docker compose run --rm frontend /bin/sh -c 'yarn create vite test'
 ```
 `--rm` : 停止後コンテナを削除<br>
 
@@ -54,7 +54,7 @@ export default defineConfig({
 
 下記コマンドを実行し、コンテナを起動する。
 ```
-docker-compose up -d
+docker compose up -d
 ```
 Webブラウザで http://localhost:5173 へアクセスし、Viteが起動していることを確認する。
 
