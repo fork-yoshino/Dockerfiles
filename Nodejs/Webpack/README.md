@@ -31,7 +31,7 @@ docker compose exec frontend ash
 yarn init -y
 ```
 
-TypeScriptパッケージをインストールし、設定ファイルを作成する。
+TypeScriptパッケージをインストールし、`tsconfig.json`を作成する。
 ```
 yarn add --dev typescript
 ```
