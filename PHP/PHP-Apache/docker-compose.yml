@@ -1,0 +1,12 @@
+version: '3.8'
+
+services:
+  web:
+    build:
+      context: ./web
+      dockerfile: Dockerfile
+    volumes:
+      - ./www:/var/www
+    ports:
+      - $WEB_PORT:80
+    tty: true
