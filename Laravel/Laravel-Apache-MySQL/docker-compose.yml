@@ -1,0 +1,35 @@
+version: '3.9'
+
+services:
+  db:
+    build:
+      context: ./docker/db
+      dockerfile: Dockerfile
+    volumes:
+      - db_data:/var/lib/mysql
+      - ./docker/db/init:/docker-entrypoint-initdb.d
+    ports:
+      - ${DB_PORT:-3306}:3306
+    environment:
+      TZ: ${DB_TZ:-Asia/Tokyo}
+      MYSQL_DATABASE: ${DB_DATABASE:-laravel}
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-root}
+      MYSQL_USER: ${DB_USERNAME:-user}
+      MYSQL_PASSWORD: ${DB_PASSWORD:-password}
+
+  web:
+    build:
+      context: ./docker/web
+      dockerfile: Dockerfile
+    volumes:
+      - ./src:/var/www
+    ports:
+      - ${WEB_PORT:-8080}:80
+      - ${WEB_FRONT_PORT:-5173}:5173
+      - ${XDEBUG_PORT:-9003}:9003
+    tty: true
+    depends_on:
+      - db
+
+volumes:
+  db_data:
