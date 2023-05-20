@@ -17,19 +17,35 @@ services:
       MYSQL_USER: ${DB_USERNAME:-user}
       MYSQL_PASSWORD: ${DB_PASSWORD:-password}
 
+  app:
+    build:
+      context: ./docker/php
+      dockerfile: Dockerfile
+    volumes:
+      - php_fpm_socket:/var/run/php-fpm/
+      - ./src:/var/www
+    ports:
+      - ${XDEBUG_PORT:-9003}:9003
+    depends_on:
+      - db
+
   web:
     build:
       context: ./docker/web
       dockerfile: Dockerfile
     volumes:
+      - php_fpm_socket:/var/run/php-fpm/
       - ./src:/var/www
     ports:
       - ${WEB_PORT:-8080}:80
-      - ${WEB_FRONT_PORT:-5173}:5173
-      - ${XDEBUG_PORT:-9003}:9003
-    tty: true
+    entrypoint: >- # `httpd.conf`に`proxy-php.conf`を読み込むための記述を追加
+      bash -c "
+        grep 'Include conf/extra/proxy-php.conf' /usr/local/apache2/conf/httpd.conf || echo 'Include conf/extra/proxy-php.conf' >> /usr/local/apache2/conf/httpd.conf
+        httpd-foreground
+      "
     depends_on:
-      - db
+      - app
 
 volumes:
   db_data:
+  php_fpm_socket:

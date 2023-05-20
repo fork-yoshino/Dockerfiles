@@ -14,9 +14,9 @@ mkdir src
 docker compose up -d --build
 ```
 
-下記コマンドを実行し、webコンテナに入る。
+下記コマンドを実行し、appコンテナに入る。
 ``` sh
-docker compose exec web bash
+docker compose exec app bash
 ```
 
 ## 3. Laravelプロジェクトの新規作成
@@ -88,3 +88,9 @@ php artisan config:clear
 
 https://laraweb.net/environment/8652/<br>
 https://qiita.com/neneta0921/items/22f9864b6f6ff6d36004<br>
+
+### PHP-FPM x Apache
+
+https://qiita.com/charon/items/a284b05a838c88b5e8bc<br>
+https://qiita.com/hamburg-love/items/f96ecd7fac7c13630279<br>
+https://qiita.com/kouki_o9/items/113002580945e94b1456<br>
