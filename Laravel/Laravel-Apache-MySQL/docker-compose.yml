@@ -1,0 +1,51 @@
+version: '3.9'
+
+services:
+  db:
+    build:
+      context: ./docker/db
+      dockerfile: Dockerfile
+    volumes:
+      - db_data:/var/lib/mysql
+      - ./docker/db/init:/docker-entrypoint-initdb.d
+    ports:
+      - ${DB_PORT:-3306}:3306
+    environment:
+      TZ: ${DB_TZ:-Asia/Tokyo}
+      MYSQL_DATABASE: ${DB_DATABASE:-laravel}
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-root}
+      MYSQL_USER: ${DB_USERNAME:-user}
+      MYSQL_PASSWORD: ${DB_PASSWORD:-password}
+
+  app:
+    build:
+      context: ./docker/php
+      dockerfile: Dockerfile
+    volumes:
+      - php_fpm_socket:/var/run/php-fpm/
+      - ./src:/var/www
+    ports:
+      - ${XDEBUG_PORT:-9003}:9003
+    depends_on:
+      - db
+
+  web:
+    build:
+      context: ./docker/web
+      dockerfile: Dockerfile
+    volumes:
+      - php_fpm_socket:/var/run/php-fpm/
+      - ./src:/var/www
+    ports:
+      - ${WEB_PORT:-8080}:80
+    entrypoint: >- # `httpd.conf`に`proxy-php.conf`を読み込むための記述を追加
+      /bin/bash -c "
+        grep 'Include conf/extra/proxy-php.conf' /usr/local/apache2/conf/httpd.conf || echo 'Include conf/extra/proxy-php.conf' >> /usr/local/apache2/conf/httpd.conf
+        httpd-foreground
+      "
+    depends_on:
+      - app
+
+volumes:
+  db_data:
+  php_fpm_socket:
