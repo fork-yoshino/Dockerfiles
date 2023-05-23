@@ -23,7 +23,7 @@ RUN apt-get update && \
     pecl install xdebug && \
     docker-php-ext-enable xdebug && \
     # ソケットファイルを格納するためのディレクトリを作成
-    mkdir /var/run/php-fpm
+    mkdir -p /var/run/php-fpm
 
 COPY ./php.ini /usr/local/etc/php/
 COPY ./php-fpm.d/zzz-www.conf /usr/local/etc/php-fpm.d/
